@@ -209,3 +209,22 @@ For issues, questions, or contributions, please open an issue on GitHub.
 ---
 
 **Happy URL Digesting! 🌐🍽️**
+**Key documentation for the May 20 2025 Gemini API update**
+
+| Area                   | Doc / Notebook                                                             | What it covers                                                                                                       |
+| ---------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Official reference** | *Gemini API – URL context tool* ([Google AI for Developers][1])            | Parameters, limits (20 URLs/request, quota), usage examples, and best-practice notes for the new `url_context` tool. |
+|                        | *Gemini API – Release notes (May 20 2025)* ([Google AI for Developers][2]) | Full changelog—including URL context, multi-tool calls, async Live API, and video-frame controls.                    |
+|                        | *Gemini API reference* (root) ([Google AI for Developers][3])              | Updated method and type definitions for SDK v1.0, including `Tool(url_context={})`.                                  |
+| **Hands-on examples**  | *Cookbook – “Browser as a tool”* notebook ([GitHub][4])                    | Three worked examples showing URL context alongside code-execution and Google-Search grounding.                      |
+|                        | *Quickstart – “Get started”* notebook ([Google Colab][5])                  | Minimal Colab that installs `google-genai`, enables URL context, and runs a compare-two-sites demo.                  |
+| **Open-source repo**   | *google-gemini/cookbook* (GitHub) ([GitHub][6])                            | All quickstarts + Apache-2.0 code kept in sync with the docs.                                                        |
+
+These links take you straight to the authoritative pages and example notebooks so you can dive into the new URL-context feature, review the full API surface, and copy/paste runnable samples.
+
+[1]: https://ai.google.dev/gemini-api/docs/url-context?utm_source=chatgpt.com "URL context | Gemini API | Google AI for Developers"
+[2]: https://ai.google.dev/gemini-api/docs/changelog?utm_source=chatgpt.com "Release notes | Gemini API | Google AI for Developers"
+[3]: https://ai.google.dev/api?utm_source=chatgpt.com "Gemini API reference | Google AI for Developers"
+[4]: https://github.com/google-gemini/cookbook/blob/main/examples/Browser_as_a_tool.ipynb?utm_source=chatgpt.com "Browser_as_a_tool.ipynb - google-gemini/cookbook - GitHub"
+[5]: https://colab.research.google.com/github/google-gemini/cookbook/blob/main/quickstarts/Get_started.ipynb?utm_source=chatgpt.com "Gemini API: Getting started with Gemini models - Colab - Google"
+[6]: https://github.com/google-gemini/cookbook?utm_source=chatgpt.com "Welcome to the Gemini API Cookbook - GitHub"
