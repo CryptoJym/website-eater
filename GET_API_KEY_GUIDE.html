@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Get Your Gemini API Key</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4285f4;
+            text-align: center;
+        }
+        .wrong {
+            background: #fee;
+            border: 2px solid #f88;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .right {
+            background: #efe;
+            border: 2px solid #8f8;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .step {
+            background: #e3f2fd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 5px solid #2196f3;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        pre {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .button {
+            display: inline-block;
+            background: #4285f4;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+        }
+        .button:hover {
+            background: #3367d6;
+        }
+        img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔑 Getting the RIGHT API Key for Gemini</h1>
+        
+        <h2>❌ What You've Been Sharing (WRONG):</h2>
+        
+        <div class="wrong">
+            <h3>1. OAuth Client (client_secret_*.json)</h3>
+            <pre>{
+  "client_id": "856573319084-kkssb...",
+  "client_secret": "GOCSPX-..."
+}</pre>
+            <p><strong>Used for:</strong> Letting users log in with Google</p>
+        </div>
+        
+        <div class="wrong">
+            <h3>2. Service Account (utlyze-*.json)</h3>
+            <pre>{
+  "type": "service_account",
+  "private_key": "-----BEGIN PRIVATE KEY-----..."
+}</pre>
+            <p><strong>Used for:</strong> Server-to-server authentication</p>
+        </div>
+        
+        <h2>✅ What You NEED (RIGHT):</h2>
+        
+        <div class="right">
+            <h3>3. API Key (Simple String)</h3>
+            <pre>AIzaSyD3f4V6wk9_XYZ123abc...</pre>
+            <p><strong>Used for:</strong> Accessing Gemini API</p>
+            <p>Just a simple string that starts with "AIza"</p>
+        </div>
+        
+        <h2>🚀 How to Get It:</h2>
+        
+        <div class="step">
+            <h3>Step 1: Go to API Credentials</h3>
+            <a href="https://console.cloud.google.com/apis/credentials?project=utlyze" class="button" target="_blank">
+                Open Google Cloud Console
+            </a>
+        </div>
+        
+        <div class="step">
+            <h3>Step 2: Create API Key</h3>
+            <p>Click the <strong>"+ CREATE CREDENTIALS"</strong> button</p>
+            <p>Then select <strong>"API key"</strong> from the dropdown</p>
+            <p><em>NOT "OAuth client ID" or "Service account key"!</em></p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 3: Copy Your Key</h3>
+            <p>A popup will show your new API key</p>
+            <p>It will look like: <code>AIzaSyD3f4V6wk9_XYZ...</code></p>
+            <p>Copy this entire string!</p>
+        </div>
+        
+        <div class="step">
+            <h3>Step 4: Enable Gemini API</h3>
+            <a href="https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com?project=utlyze" class="button" target="_blank">
+                Enable Generative Language API
+            </a>
+            <p>Click "ENABLE" on this page</p>
+        </div>
+        
+        <h2>📝 Visual Guide:</h2>
+        <p>When you click "+ CREATE CREDENTIALS", you'll see this menu:</p>
+        <div style="background: #f5f5f5; padding: 20px; border-radius: 5px;">
+            <p>📍 <strong>API key</strong> ← Click this one!</p>
+            <p style="opacity: 0.5;">OAuth client ID ← Not this</p>
+            <p style="opacity: 0.5;">Service account key ← Not this</p>
+        </div>
+    </div>
+</body>
+</html>

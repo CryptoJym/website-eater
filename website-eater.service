@@ -1,0 +1,24 @@
+[Unit]
+Description=Website Eater Web Scraping Service
+After=network.target
+
+[Service]
+Type=simple
+User=webapp
+Group=webapp
+WorkingDirectory=/opt/website-eater/backend
+Environment="PATH=/opt/website-eater/backend/venv/bin"
+Environment="FLASK_ENV=production"
+ExecStart=/opt/website-eater/backend/venv/bin/python app.py
+Restart=always
+RestartSec=10
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/website-eater/backend/data
+
+[Install]
+WantedBy=multi-user.target

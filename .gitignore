@@ -1,0 +1,67 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+backend/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+backend/venv/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite3
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+
+# API Keys and credentials
+*secret*
+*credential*
+*.json
+!package.json
+!package-lock.json
+
+# Data files
+backend/data/
+data/
+
+# Node modules (if any frontend exists)
+node_modules/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.pytest_cache/
+
+# Distribution
+dist/
+build/
+*.egg-info/

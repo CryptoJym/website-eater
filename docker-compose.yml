@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=False
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
+      - website_data:/app/data
+    restart: unless-stopped
+    networks:
+      - website_eater_network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - website_eater_network
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./frontend:/usr/share/nginx/html
+      - ./certs:/etc/nginx/certs
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - website_eater_network
+
+volumes:
+  website_data:
+  redis_data:
+
+networks:
+  website_eater_network:
+    driver: bridge
