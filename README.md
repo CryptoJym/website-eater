@@ -11,6 +11,8 @@ An AI-powered URL digestion tool that uses Google Gemini to extract and analyze 
 - **💾 Memory Storage**: Creates searchable memories from extracted content
 - **🎯 Smart Routing**: Automatically categorizes content (video, code, documentation, etc.)
 - **🌐 Web Interface**: Clean, modern UI for easy URL submission and result viewing
+- **🐛 Bug Report Integration**: Drop Loom videos for bug reports with automatic transcription
+- **💬 Feedback System**: Submit context, feedback, and additional information to AI database
 
 ## 🚀 Quick Start
 
@@ -98,6 +100,26 @@ print(f"Title: {data['title']}")
 print(f"Content Type: {data['content_type']}")
 print(f"Analysis: {data['analysis']}")
 ```
+
+### Feedback & Bug Reports
+
+The bottom section of the interface allows you to submit:
+
+- **Loom Videos**: Automatically detects and processes Loom URLs for bug reports
+- **General Feedback**: Feature requests, ideas, or any context
+- **Bug Reports**: Detailed descriptions with optional video evidence
+
+Example:
+```
+https://www.loom.com/share/abc123...
+Bug: The submit button doesn't work when...
+```
+
+All feedback is automatically:
+- Processed by Gemini AI
+- Categorized (bug_report, feature_request, etc.)
+- Routed to appropriate destinations (bug_tracker, development_backlog)
+- Stored in the knowledge base for future reference
 
 ## 🏗️ Architecture
 
