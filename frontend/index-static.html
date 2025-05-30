@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Eater - AI-Powered URL Digestion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(to right, #4285f4, #ea4335, #fbbc05, #34a853);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #dc2626;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 1rem 0;
+        }
+
+        .status-badge.active {
+            background: #16a34a;
+        }
+
+        .main-card {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
+        }
+
+        .setup-notice {
+            background: #f59e0b;
+            color: #000;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .setup-notice h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .setup-notice a {
+            color: #000;
+            font-weight: bold;
+        }
+
+        .demo-section {
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .demo-section h2 {
+            color: #f1f5f9;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: #0f172a;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            color: #f1f5f9;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .deploy-options {
+            background: #0f172a;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .deploy-options h3 {
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+        }
+
+        .deploy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .deploy-card {
+            background: #1e293b;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+
+        .deploy-card h4 {
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+
+        .deploy-card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .deploy-card a {
+            color: #4285f4;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .code-block {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            color: #a5f3fc;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .github-link:hover {
+            background: #334155;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌐 Website Eater</h1>
+            <p class="subtitle">AI-Powered URL Digestion with Google Gemini</p>
+            <span class="status-badge">⚠️ Backend Server Required</span>
+        </div>
+
+        <div class="setup-notice">
+            <h3>📍 This is a Frontend-Only Deployment</h3>
+            <p>Website Eater requires a Python backend server to function. This Netlify deployment only shows the frontend interface.</p>
+            <p style="margin-top: 0.5rem;">
+                <strong>To use Website Eater:</strong> You need to run the backend server locally or deploy it to a Python hosting service.
+            </p>
+        </div>
+
+        <div class="main-card">
+            <h2 style="margin-bottom: 1.5rem;">🚀 What is Website Eater?</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📹</div>
+                    <div class="feature-title">YouTube Video Analysis</div>
+                    <div class="feature-desc">Extract transcripts, summaries, and key insights from any YouTube video using AI</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💻</div>
+                    <div class="feature-title">GitHub Repo Analysis</div>
+                    <div class="feature-desc">Understand code repositories, documentation, and project structure instantly</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📰</div>
+                    <div class="feature-title">Webpage Content Extraction</div>
+                    <div class="feature-desc">Digest articles, blogs, and any webpage into structured, searchable content</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="https://github.com/CryptoJym/website-eater" class="github-link">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🛠️ How to Run Website Eater</h2>
+            
+            <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">Option 1: Run Locally (Recommended)</h3>
+            <div class="code-block">
+                <code>
+# Clone the repository<br>
+git clone https://github.com/CryptoJym/website-eater.git<br>
+cd website-eater<br><br>
+
+# Set up backend<br>
+cd backend<br>
+python -m venv venv<br>
+source venv/bin/activate  # Windows: venv\Scripts\activate<br>
+pip install -r requirements.txt<br><br>
+
+# Add your Google API key<br>
+cp .env.template .env<br>
+# Edit .env and add your API key<br><br>
+
+# Start the server<br>
+cd ..<br>
+./restart_server.sh<br><br>
+
+# Open http://localhost:5003
+                </code>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Option 2: Deploy Backend</h3>
+            <div class="deploy-grid">
+                <div class="deploy-card">
+                    <h4>Heroku</h4>
+                    <p>Free Python hosting with easy deployment</p>
+                    <a href="https://devcenter.heroku.com/articles/getting-started-with-python">Deploy Guide →</a>
+                </div>
+                <div class="deploy-card">
+                    <h4>Railway</h4>
+                    <p>Modern platform with GitHub integration</p>
+                    <a href="https://railway.app">Deploy Guide →</a>
+                </div>
+                <div class="deploy-card">
+                    <h4>Render</h4>
+                    <p>Free tier with automatic deploys</p>
+                    <a href="https://render.com">Deploy Guide →</a>
+                </div>
+                <div class="deploy-card">
+                    <h4>PythonAnywhere</h4>
+                    <p>Specialized Python hosting</p>
+                    <a href="https://www.pythonanywhere.com">Deploy Guide →</a>
+                </div>
+            </div>
+
+            <div class="deploy-options">
+                <h3>📋 Backend Requirements</h3>
+                <ul style="color: #94a3b8; margin-left: 1.5rem; line-height: 1.8;">
+                    <li>Python 3.8 or higher</li>
+                    <li>Google Cloud API key with Generative Language API enabled</li>
+                    <li>Environment variables configured</li>
+                    <li>Port configuration (default: 5003)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show a more helpful message in console
+        console.log('%c🌐 Website Eater', 'font-size: 20px; font-weight: bold; color: #4285f4;');
+        console.log('%cThis is a frontend-only deployment. To use Website Eater:', 'font-size: 14px; color: #f59e0b;');
+        console.log('%c1. Clone the repo: https://github.com/CryptoJym/website-eater', 'font-size: 12px;');
+        console.log('%c2. Set up the Python backend with your Google API key', 'font-size: 12px;');
+        console.log('%c3. Run locally or deploy the backend to a Python hosting service', 'font-size: 12px;');
+    </script>
+</body>
+</html>

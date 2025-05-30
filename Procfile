@@ -1,0 +1,1 @@
+web: cd backend && gunicorn app_url_digestion:app --bind 0.0.0.0:$PORT
