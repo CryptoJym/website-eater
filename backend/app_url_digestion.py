@@ -42,6 +42,18 @@ Please provide:
 4. Video duration and upload date if available
 5. Summary of the content"""
 
+        elif 'loom.com' in url:
+            # Special handling for Loom videos
+            prompt = f"""Analyze this Loom video recording: {url}
+
+Please provide:
+1. Video title and creator
+2. Main topics or issues discussed
+3. Key points, bugs, or problems demonstrated
+4. Any action items or requests
+5. Summary of the content
+6. If this appears to be a bug report, extract the specific issue"""
+
         elif any(domain in url for domain in ['github.com', 'gitlab.com']):
             prompt = f"""Analyze this code repository: {url}
 
@@ -77,6 +89,10 @@ Please provide:
             max_output_tokens=2048,
         )
         
+        # Include additional context if provided
+        if options and options.get('additional_context'):
+            prompt += f"\n\nAdditional context provided by user:\n{options['additional_context']}"
+        
         response = genai_client.models.generate_content(
             model=Config.MODEL_ID,
             contents=prompt,
@@ -110,7 +126,8 @@ Please provide:
             'analysis': analysis,
             'url_accessed': url_accessed,
             'extraction_status': 'success',
-            'method': 'gemini_url_digestion'
+            'method': 'gemini_url_digestion',
+            'options': options  # Pass options through
         }
         
     except Exception as e:
@@ -158,7 +175,12 @@ def process_content(extracted_data, user_id):
         analysis_lower = analysis.lower()
         content_type = 'general'
         
-        if 'youtube' in analysis_lower or 'video' in analysis_lower:
+        # Check if it's from feedback/context submission
+        if extracted_data.get('options', {}).get('context_type'):
+            content_type = extracted_data['options']['context_type']
+        elif 'loom' in analysis_lower or 'loom.com' in extracted_data['url']:
+            content_type = 'bug_report' if 'bug' in analysis_lower else 'video_feedback'
+        elif 'youtube' in analysis_lower or 'video' in analysis_lower:
             content_type = 'video'
         elif 'repository' in analysis_lower or 'github' in analysis_lower:
             content_type = 'code'
@@ -199,7 +221,11 @@ def process_content(extracted_data, user_id):
         
         # Determine routes
         routes = []
-        if content_type == 'video':
+        if content_type == 'bug_report':
+            routes = [{'destination': 'bug_tracker'}, {'destination': 'development_backlog'}, {'destination': 'knowledge_base'}]
+        elif content_type == 'video_feedback':
+            routes = [{'destination': 'feedback_library'}, {'destination': 'knowledge_base'}]
+        elif content_type == 'video':
             routes = [{'destination': 'video_library'}, {'destination': 'knowledge_base'}]
         elif content_type == 'code':
             routes = [{'destination': 'code_repository'}, {'destination': 'knowledge_base'}]
@@ -624,6 +650,123 @@ def index():
                 background: #dc2626;
                 color: white;
             }
+            
+            
+            .feedback-section {
+                background: #1e293b;
+                border-radius: 16px;
+                padding: 2rem;
+                margin-top: 3rem;
+                border: 2px dashed #334155;
+                transition: all 0.3s;
+            }
+            
+            .feedback-section:hover {
+                border-color: #4285f4;
+                box-shadow: 0 0 20px rgba(66, 133, 244, 0.1);
+            }
+            
+            .feedback-header {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .feedback-icon {
+                font-size: 2.5rem;
+            }
+            
+            .feedback-title {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: #f1f5f9;
+            }
+            
+            .feedback-subtitle {
+                color: #94a3b8;
+                margin-top: 0.5rem;
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+            
+            .context-textarea {
+                width: 100%;
+                min-height: 120px;
+                padding: 1rem;
+                background: #0f172a;
+                border: 2px solid #334155;
+                border-radius: 8px;
+                color: #e2e8f0;
+                font-size: 16px;
+                font-family: inherit;
+                resize: vertical;
+                transition: all 0.3s;
+            }
+            
+            .context-textarea:focus {
+                outline: none;
+                border-color: #4285f4;
+                box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+            }
+            
+            .context-textarea::placeholder {
+                color: #64748b;
+            }
+            
+            .loom-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: #625DF5;
+                color: white;
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                font-weight: 500;
+                margin-top: 1rem;
+            }
+            
+            .feedback-features {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+                margin-top: 1.5rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid #334155;
+            }
+            
+            .feedback-feature {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: #94a3b8;
+                font-size: 0.9rem;
+            }
+            
+            .feedback-feature-icon {
+                color: #4285f4;
+                font-size: 1.2rem;
+            }
+            
+            #feedbackStatus {
+                margin-top: 1rem;
+                padding: 1rem;
+                border-radius: 8px;
+                display: none;
+            }
+            
+            #feedbackStatus.success {
+                background: #065f46;
+                color: #6ee7b7;
+                display: block;
+            }
+            
+            #feedbackStatus.error {
+                background: #7f1d1d;
+                color: #fca5a5;
+                display: block;
+            }
         </style>
     </head>
     <body>
@@ -686,7 +829,64 @@ def index():
                 </div>
             </div>
             
+            
             <div id="results"></div>
+            
+            <!-- Feedback and Context Section -->
+            <div class="feedback-section">
+                <div class="feedback-header">
+                    <span class="feedback-icon">📝</span>
+                    <div>
+                        <h2 class="feedback-title">Additional Context & Bug Reports</h2>
+                        <p class="feedback-subtitle">
+                            Drop in any additional context, feedback, or bug reports here. 
+                            This is perfect for sharing Loom videos, screenshots, or detailed descriptions 
+                            that will automatically be digested and filed in our AI database for later use.
+                        </p>
+                    </div>
+                </div>
+                
+                <textarea 
+                    id="contextInput"
+                    class="context-textarea" 
+                    placeholder="Paste your Loom video URL, bug description, or any additional context here...
+
+Example:
+- Loom video: https://www.loom.com/share/...
+- Bug: When I click the submit button, nothing happens
+- Feature request: It would be great if...
+- Context: This relates to the previous URL I submitted about..."
+                ></textarea>
+                
+                <button onclick="submitContext()" id="contextBtn">
+                    <span>📤</span> Submit to AI Database
+                </button>
+                
+                <div class="loom-badge">
+                    <span>🎥</span> Loom videos are automatically transcribed and analyzed
+                </div>
+                
+                <div id="feedbackStatus"></div>
+                
+                <div class="feedback-features">
+                    <div class="feedback-feature">
+                        <span class="feedback-feature-icon">🐛</span>
+                        <span>Bug reports with video evidence</span>
+                    </div>
+                    <div class="feedback-feature">
+                        <span class="feedback-feature-icon">💡</span>
+                        <span>Feature requests & ideas</span>
+                    </div>
+                    <div class="feedback-feature">
+                        <span class="feedback-feature-icon">📊</span>
+                        <span>Additional data & context</span>
+                    </div>
+                    <div class="feedback-feature">
+                        <span class="feedback-feature-icon">🔄</span>
+                        <span>Auto-filed for future reference</span>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <script>
@@ -810,10 +1010,126 @@ def index():
                 document.getElementById('successRate').textContent = rate + '%';
             }
             
+            
             // Allow Enter key to submit
             document.getElementById('urlInput').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') processURL();
             });
+            
+            // Submit context/feedback function
+            async function submitContext() {
+                const contextInput = document.getElementById('contextInput');
+                const contextBtn = document.getElementById('contextBtn');
+                const feedbackStatus = document.getElementById('feedbackStatus');
+                const context = contextInput.value.trim();
+                
+                if (!context) {
+                    feedbackStatus.className = 'error';
+                    feedbackStatus.textContent = 'Please enter some context or feedback';
+                    feedbackStatus.style.display = 'block';
+                    setTimeout(() => {
+                        feedbackStatus.style.display = 'none';
+                    }, 3000);
+                    return;
+                }
+                
+                contextBtn.disabled = true;
+                feedbackStatus.className = '';
+                feedbackStatus.textContent = 'Processing your feedback...';
+                feedbackStatus.style.display = 'block';
+                
+                try {
+                    // Check if it's a Loom URL
+                    const isLoomUrl = context.includes('loom.com/share/');
+                    let urlToProcess = null;
+                    let additionalContext = context;
+                    
+                    if (isLoomUrl) {
+                        // Extract Loom URL
+                        const loomMatch = context.match(/https?:\/\/[^\s]*loom\.com\/share\/[^\s]+/);
+                        if (loomMatch) {
+                            urlToProcess = loomMatch[0];
+                            additionalContext = context.replace(urlToProcess, '').trim();
+                        }
+                    }
+                    
+                    // If we have a URL (Loom or other), process it
+                    if (urlToProcess || context.match(/^https?:\/\//)) {
+                        const url = urlToProcess || context.match(/^https?:\/\/[^\s]+/)[0];
+                        const response = await fetch('/api/digest', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ 
+                                url,
+                                options: {
+                                    extract_metadata: true,
+                                    deep_analysis: true,
+                                    context_type: isLoomUrl ? 'bug_report' : 'feedback',
+                                    additional_context: additionalContext
+                                }
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.status === 'success') {
+                            feedbackStatus.className = 'success';
+                            feedbackStatus.innerHTML = `
+                                ✅ ${isLoomUrl ? 'Loom video' : 'URL'} successfully processed and filed!<br>
+                                <small>Memory ID: ${data.memory_id}</small>
+                            `;
+                            contextInput.value = '';
+                            
+                            // Update stats
+                            processedCount++;
+                            successCount++;
+                            memoryCount++;
+                            updateStats();
+                        } else {
+                            feedbackStatus.className = 'error';
+                            feedbackStatus.textContent = '❌ Error: ' + data.error;
+                        }
+                    } else {
+                        // Just context/feedback without URL
+                        const response = await fetch('/api/feedback', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ 
+                                content: context,
+                                type: 'general_feedback'
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.status === 'success') {
+                            feedbackStatus.className = 'success';
+                            feedbackStatus.innerHTML = `
+                                ✅ Feedback successfully filed in AI database!<br>
+                                <small>Reference ID: ${data.feedback_id}</small>
+                            `;
+                            contextInput.value = '';
+                        } else {
+                            feedbackStatus.className = 'error';
+                            feedbackStatus.textContent = '❌ Error: ' + data.error;
+                        }
+                    }
+                } catch (error) {
+                    feedbackStatus.className = 'error';
+                    feedbackStatus.textContent = '❌ Error: ' + error.message;
+                } finally {
+                    contextBtn.disabled = false;
+                    
+                    // Hide status after 5 seconds
+                    setTimeout(() => {
+                        feedbackStatus.style.display = 'none';
+                    }, 5000);
+                }
+            }
             
             // Initialize stats
             updateStats();
@@ -873,6 +1189,46 @@ def get_memories(user_id):
         'status': 'success',
         'memories': user_memories
     })
+
+@app.route('/api/feedback', methods=['POST'])
+def submit_feedback():
+    """API endpoint for general feedback and context"""
+    try:
+        data = request.json
+        content = data.get('content')
+        feedback_type = data.get('type', 'general_feedback')
+        user_id = data.get('user_id', Config.USER_ID)
+        
+        if not content:
+            return jsonify({'status': 'error', 'error': 'No content provided'}), 400
+        
+        # Generate feedback ID
+        content_hash = hashlib.sha256(content.encode()).hexdigest()[:8]
+        feedback_id = f"feedback_{content_hash}_{len(memories)}"
+        
+        # Store as a special type of memory
+        memory_entry = {
+            'id': feedback_id,
+            'user_id': user_id,
+            'title': f'Feedback: {content[:50]}...' if len(content) > 50 else f'Feedback: {content}',
+            'content': content,
+            'metadata': {
+                'timestamp': datetime.now().isoformat(),
+                'content_type': feedback_type,
+                'content_length': len(content),
+                'source': 'user_feedback'
+            }
+        }
+        memories.append(memory_entry)
+        
+        return jsonify({
+            'status': 'success',
+            'feedback_id': feedback_id,
+            'message': 'Feedback successfully stored'
+        })
+        
+    except Exception as e:
+        return jsonify({'status': 'error', 'error': str(e)}), 500
 
 if __name__ == '__main__':
     print("\n🌐 Website Eater - Gemini URL Digestion")
